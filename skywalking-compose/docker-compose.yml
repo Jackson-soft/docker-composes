@@ -1,0 +1,79 @@
+version: "3.7"
+
+services:
+    elasticsearch:
+        image: elasticsearch
+        container_name: elasticsearch
+        restart: always
+        ports:
+            - 5535:9200
+            - 5536:9300
+        environment:
+            - discovery.type=single-node
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+            - http.cors.enabled=true
+            - http.cors.allow-origin=*
+            - network.host=_eth0_
+        volumes:
+            - type: volume
+              source: logs
+              target: /var/log/elasticsearch
+            - type: volume
+              source: esdata
+              target: /var/lib/elasticsearch
+        networks:
+            - elastic
+            - ingress
+    kibana:
+        image: kibana
+        container_name: kibana
+        environment:
+            SERVER_NAME: localhost
+            ELASTICSEARCH_URL: http://elasticsearch:9200
+        ports:
+            - 5533:5601
+        links:
+            - elasticsearch
+        depends_on:
+            - elasticsearch
+        volumes:
+            - type: volume
+              source: logs
+              target: /var/log/kibana
+        networks:
+            - elastic
+            - ingress
+    oap:
+        image: apache/skywalking-oap-server
+        container_name: oap
+        depends_on:
+            - elasticsearch
+        links:
+            - elasticsearch
+        restart: always
+        ports:
+            - 11800:11800
+            - 12800:12800
+        environment:
+            SW_STORAGE: elasticsearch
+            SW_STORAGE_ES_CLUSTER_NODES: elasticsearch:9200
+    ui:
+        image: apache/skywalking-ui
+        container_name: ui
+        depends_on:
+            - oap
+        links:
+            - oap
+        restart: always
+        ports:
+            - 18080:8080
+        environment:
+            SW_OAP_ADDRESS: oap:12800
+volumes:
+    esdata:
+    logs:
+
+networks:
+    elastic:
+    ingress:
