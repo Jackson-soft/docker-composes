@@ -7,6 +7,7 @@ services:
         restart: always
         ports:
             - 5535:9200
+            - 9300:9300
         healthcheck:
             test:
                 [
@@ -18,18 +19,14 @@ services:
             retries: 3
             start_period: 40s
         environment:
-            - discovery.type=single-node
+            - cluster.name=skywalkingDb
             - bootstrap.memory_lock=true
             - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
             - http.cors.enabled=true
             - http.cors.allow-origin=*
         volumes:
-            - type: volume
-              source: logs
-              target: /var/log/elasticsearch
-            - type: volume
-              source: esdata
-              target: /var/lib/elasticsearch
+            - ./elasticsearch/logs:/usr/share/elasticsearch/logs
+            - ./elasticsearch/data:/usr/share/elasticsearch/data
     kibana:
         image: kibana:7.9.1
         container_name: kibana
@@ -42,10 +39,6 @@ services:
             - elasticsearch
         depends_on:
             - elasticsearch
-        volumes:
-            - type: volume
-              source: logs
-              target: /var/log/kibana
     oap:
         image: apache/skywalking-oap-server:8.1.0-es7
         container_name: oap
@@ -67,7 +60,7 @@ services:
             SW_STORAGE: elasticsearch7
             SW_STORAGE_ES_CLUSTER_NODES: elasticsearch:9200
     ui:
-        image: apache/skywalking-ui:8.1.0
+        image: apache/skywalking-ui
         container_name: ui
         depends_on:
             - oap
@@ -78,8 +71,3 @@ services:
             - 18080:8080
         environment:
             SW_OAP_ADDRESS: oap:12800
-volumes:
-    esdata:
-        driver: local
-    logs:
-        driver: local
