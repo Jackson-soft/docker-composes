@@ -2,19 +2,18 @@ version: "3.7"
 
 services:
     elasticsearch:
-        image: elasticsearch
+        image: elasticsearch:7.9.1
         container_name: elasticsearch
         restart: always
         ports:
             - 5535:9200
             - 5536:9300
         environment:
-            - discovery.type=single-node
-            - bootstrap.memory_lock=true
-            - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
-            - http.cors.enabled=true
-            - http.cors.allow-origin=*
-            - network.host=_eth0_
+            discovery.type: single-node
+            bootstrap.memory_lock: true
+            http.cors.enabled: true
+            http.cors.allow-origin: "*"
+            ES_JAVA_OPTS: "-Xms512m -Xmx512m"
         volumes:
             - type: volume
               source: logs
@@ -24,9 +23,8 @@ services:
               target: /var/lib/elasticsearch
         networks:
             - elastic
-            - ingress
     kibana:
-        image: kibana
+        image: kibana:7.9.1
         container_name: kibana
         environment:
             SERVER_NAME: localhost
@@ -43,7 +41,6 @@ services:
               target: /var/log/kibana
         networks:
             - elastic
-            - ingress
     oap:
         image: apache/skywalking-oap-server
         container_name: oap
@@ -58,6 +55,8 @@ services:
         environment:
             SW_STORAGE: elasticsearch
             SW_STORAGE_ES_CLUSTER_NODES: elasticsearch:9200
+        networks:
+            - elastic
     ui:
         image: apache/skywalking-ui
         container_name: ui
@@ -70,10 +69,14 @@ services:
             - 18080:8080
         environment:
             SW_OAP_ADDRESS: oap:12800
+        networks:
+            - elastic
 volumes:
     esdata:
+        driver: local
     logs:
+        driver: local
 
 networks:
     elastic:
-    ingress:
+        driver: bridge
