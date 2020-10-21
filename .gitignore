@@ -1,0 +1,3 @@
+apisix_logs/
+apisix_conf/
+etcd_data/

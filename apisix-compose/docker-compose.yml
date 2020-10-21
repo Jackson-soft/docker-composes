@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+    apisix:
+        image: apache/apisix
+        restart: always
+        volumes:
+            - ./apisix_logs:/usr/local/apisix/logs
+            - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro
+        depends_on:
+            - etcd
+        ports:
+            - 9080:9080
+            - 9180:9180
+            - 9443:9443
+        networks:
+            apisix:
+                ipv4_address: 172.18.5.10
+    etcd:
+        image: quay.io/coreos/etcd
+        restart: always
+        entrypoint: /usr/local/bin/etcd
+        command:
+            - "-data-dir=/etcd_data"
+            - "--name=etcd-1"
+            - "--initial-advertise-peer-urls=http://0.0.0.0:2380"
+            - "--listen-peer-urls=http://0.0.0.0:2380"
+            - "--listen-client-urls=http://0.0.0.0:2379"
+            - "--advertise-client-urls=http://0.0.0.0:2379"
+            - "--initial-cluster=etcd-1=http://0.0.0.0:2380"
+            - "--enable-v2=true"
+        volumes:
+            - ./etcd_data:/etcd_data
+        ports:
+            - 2379:2379
+            - 2380:2380
+        networks:
+            apisix:
+                ipv4_address: 172.18.5.11
+networks:
+    apisix:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.18.0.0/16
