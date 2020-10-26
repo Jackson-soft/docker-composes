@@ -1,9 +1,9 @@
 version: "3"
 services:
-    mysql-master:
-        image: mysql
-        container_name: mysql-master
-        restart: unless-stopped
+    mariadb-master:
+        image: mariadb
+        container_name: mariadb-master
+        restart: always
         environment:
             - MYSQL_USER=2uchat
             - MYSQL_PASSWORD=1#aHh2
@@ -11,7 +11,7 @@ services:
         ports:
             - 8033:3306
         volumes:
-            - mysql-master-data:/var/lib/mysql
+            - /data0/mariadb:/var/lib/mysql
         command:
             [
                 "--log-bin=mysql-master-bin",
@@ -21,31 +21,31 @@ services:
                 "--innodb_flush_log_at_trx_commit=1",
                 "--sync_binlog=1",
             ]
-    mysql-slave:
-        image: mysql
-        container_name: mysql-slave
-        restart: unless-stopped
+    mariadb-slave:
+        image: mariadb
+        container_name: mariadb-slave
+        restart: always
         depends_on:
-            - mysql-master
+            - mariadb-master
         environment:
             - MYSQL_ROOT_PASSWORD=F4i^f9
             - MASTER_MYSQL_ROOT_PASSWORD=F4i^f9
         ports:
             - 8034:3306
         volumes:
-            - mysql-node-2-data:/var/lib/mysql
+            - /data1/mariadb:/var/lib/mysql
         command:
             [
                 "--server-id=2",
                 "--character-set-server=utf8mb4",
                 "--collation-server=utf8mb4_unicode_ci",
-                "--relay-log=mysql-node-relay-bin",
+                "--relay-log=mysql-slave-relay-bin",
             ]
     redis:
         image: redis
         container_name: redis
-        restart: unless-stopped
+        restart: always
         ports:
             - "8044:6379"
         volumes:
-            - ./redis_conf/redis.conf:/usr/local/etc/redis/redis.conf
+            - ./redis_data:/data
