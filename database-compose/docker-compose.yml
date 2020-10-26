@@ -1,0 +1,51 @@
+version: "3"
+services:
+    mysql-master:
+        image: mysql
+        container_name: mysql-master
+        restart: unless-stopped
+        environment:
+            - MYSQL_USER=2uchat
+            - MYSQL_PASSWORD=1#aHh2
+            - MYSQL_ROOT_PASSWORD=F4i^f9
+        ports:
+            - 8033:3306
+        volumes:
+            - mysql-master-data:/var/lib/mysql
+        command:
+            [
+                "--log-bin=mysql-master-bin",
+                "--server-id=1",
+                "--character-set-server=utf8mb4",
+                "--collation-server=utf8mb4_unicode_ci",
+                "--innodb_flush_log_at_trx_commit=1",
+                "--sync_binlog=1",
+            ]
+    mysql-slave:
+        image: mysql
+        container_name: mysql-slave
+        restart: unless-stopped
+        depends_on:
+            - mysql-master
+        environment:
+            - MYSQL_ROOT_PASSWORD=F4i^f9
+            - MASTER_MYSQL_ROOT_PASSWORD=F4i^f9
+        ports:
+            - 8034:3306
+        volumes:
+            - mysql-node-2-data:/var/lib/mysql
+        command:
+            [
+                "--server-id=2",
+                "--character-set-server=utf8mb4",
+                "--collation-server=utf8mb4_unicode_ci",
+                "--relay-log=mysql-node-relay-bin",
+            ]
+    redis:
+        image: redis
+        container_name: redis
+        restart: unless-stopped
+        ports:
+            - "8044:6379"
+        volumes:
+            - ./redis_conf/redis.conf:/usr/local/etc/redis/redis.conf
