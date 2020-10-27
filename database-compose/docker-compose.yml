@@ -5,22 +5,15 @@ services:
         container_name: mariadb-master
         restart: always
         environment:
+            - MARIADB_REPLICATION_MODE=master
             - MYSQL_USER=2uchat
             - MYSQL_PASSWORD=1#aHh2
             - MYSQL_ROOT_PASSWORD=F4i^f9
         ports:
             - 8033:3306
         volumes:
+            - ./mysql_conf/master/my.cnf:/etc/mysql/my.cnf
             - /data0/mariadb:/var/lib/mysql
-        command:
-            [
-                "--log-bin=mysql-master-bin",
-                "--server-id=1",
-                "--character-set-server=utf8mb4",
-                "--collation-server=utf8mb4_unicode_ci",
-                "--innodb_flush_log_at_trx_commit=1",
-                "--sync_binlog=1",
-            ]
     mariadb-slave:
         image: mariadb
         container_name: mariadb-slave
@@ -28,19 +21,18 @@ services:
         depends_on:
             - mariadb-master
         environment:
+            - MYSQL_REPLICATION_MODE=slave
+            - MYSQL_MASTER_HOST=mariadb-master
+            - MYSQL_MASTER_PORT_NUMBER=3306
             - MYSQL_ROOT_PASSWORD=F4i^f9
+            - MYSQL_USER=2uchat
+            - MYSQL_PASSWORD=1#aHh2
             - MASTER_MYSQL_ROOT_PASSWORD=F4i^f9
         ports:
             - 8034:3306
         volumes:
+            - ./mysql_conf/slave/my.cnf:/etc/mysql/my.cnf
             - /data1/mariadb:/var/lib/mysql
-        command:
-            [
-                "--server-id=2",
-                "--character-set-server=utf8mb4",
-                "--collation-server=utf8mb4_unicode_ci",
-                "--relay-log=mysql-slave-relay-bin",
-            ]
     redis:
         image: redis
         container_name: redis
