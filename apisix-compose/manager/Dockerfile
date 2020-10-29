@@ -1,26 +1,19 @@
-#
-# Licensed to the Apache Software Foundation (ASF) under one or more
-# contributor license agreements.  See the NOTICE file distributed with
-# this work for additional information regarding copyright ownership.
-# The ASF licenses this file to You under the Apache License, Version 2.0
-# (the "License"); you may not use this file except in compliance with
-# the License.  You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+# 下载代码
+FROM adockero/git-cli as git
 
-FROM golang:1.13.8 AS build-env
+ARG GIT_BRANCH=master
+
+RUN cd / && git clone https://github.com/apache/apisix-dashboard.git
+RUN cd /apisix-dashboard && git checkout -B ${GIT_BRANCH} origin/${GIT_BRANCH}
+
+
+# @see https://github.com/apache/apisix-dashboard/blob/master/api/Dockerfile
+FROM golang AS build-env
 
 WORKDIR /go/src/github.com/apisix/manager-api
-COPY . .
-RUN mkdir -p /go/manager-api \
-    && mkdir -p /go/manager-api/build-tools \
+COPY --from=git /apisix-dashboard/api /go/src/github.com/apisix/manager-api
+RUN mkdir /go/manager-api \
+    && mkdir /go/manager-api/build-tools \
     && go env -w GOPROXY=https://goproxy.io,direct \
     && export GOPROXY=https://goproxy.io \
     && go build -o /go/manager-api/manager-api \
@@ -34,29 +27,30 @@ RUN mkdir -p /go/manager-api \
 
 RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz \
     && tar -zxvf v1.1.tar.gz \
-    && mkdir -p /go/manager-api/dag-to-lua \
-    && mv -u ./dag-to-lua-1.1/lib/* /go/manager-api/dag-to-lua/
+    && mkdir /go/manager-api/dag-to-lua \
+    && mv ./dag-to-lua-1.1/lib/* /go/manager-api/dag-to-lua/
 
 RUN  wget https://github.com/apache/apisix/archive/master.zip \
+    && mkdir /go/manager-api/build-tools/apisix \
     && apt-get update && apt-get install zip -y \
     && unzip master.zip \
-    && rm -rf /go/manager-api/build-tools/apisix/ \
-    && mkdir -p /go/manager-api/build-tools/apisix \
     && mv ./apisix-master/apisix/* /go/manager-api/build-tools/apisix/
 
 FROM alpine
 
 WORKDIR /go/manager-api
 COPY --from=build-env /go/manager-api/ /go/manager-api/
+COPY ../manager_conf/entry.sh /go/manager-api/entry.sh
+COPY ../manager_conf/conf.json /go/manager-api/conf.json
 COPY --from=build-env /usr/share/zoneinfo/Hongkong /etc/localtime
 
-RUN mkdir -p /go/manager-api \
-    && apk update  \
+RUN apk update  \
     && apk add ca-certificates \
     && update-ca-certificates \
     && apk add --no-cache libc6-compat \
     && echo "hosts: files dns" > /etc/nsswitch.conf \
     && rm -rf /var/cache/apk/* \
+    # 原有独立run
     && apk add lua5.1 \
     && cd /go/manager-api/build-tools \
     && lua schema-sync.lua > /go/manager-api/schema.json \
@@ -64,10 +58,6 @@ RUN mkdir -p /go/manager-api \
     && rm -rf /go/manager-api/build-tools/ \
     && chmod +x ./entry.sh
 
-ADD ./dist /go/manager-api
-
 EXPOSE 8080
-
-
 
 CMD ["/bin/ash", "-c", "/go/manager-api/entry.sh"]

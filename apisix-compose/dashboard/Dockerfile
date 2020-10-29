@@ -15,23 +15,30 @@
 # limitations under the License.
 #
 
+FROM adockero/git-cli as git
+
+ARG GIT_BRANCH=master
+
+RUN cd / && git clone https://github.com/apache/apisix-dashboard.git
+RUN cd /apisix-dashboard && git checkout -B ${GIT_BRANCH} origin/${GIT_BRANCH}
+
 # phase-build
-FROM node:12 as builder
+FROM node:14 as builder
 
 WORKDIR /usr/src/app/
 USER root
 
-COPY package.json ./
-COPY yarn.lock ./
+COPY --from=git /apisix-dashboard/package.json ./
+COPY --from=git /apisix-dashboard/yarn.lock ./
 RUN yarn
 
-COPY ./ ./
+COPY --from=git /apisix-dashboard ./
 RUN yarn build && rm -rf /usr/src/app/node_modules
 
 # phase-run
 FROM nginx
 
-COPY ./docker/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=git /apisix-dashboard/docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
 
 EXPOSE 80
