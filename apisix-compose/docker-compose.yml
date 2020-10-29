@@ -14,7 +14,7 @@ services:
             - 9180:9180
             - 9443:9443
         networks:
-            apisix:
+            apisix-net:
                 ipv4_address: 172.18.5.10
     etcd:
         image: quay.io/coreos/etcd
@@ -34,7 +34,7 @@ services:
             - 2379:2379
             - 2380:2380
         networks:
-            apisix:
+            apisix-net:
                 ipv4_address: 172.18.5.11
     manager:
         build:
@@ -48,7 +48,7 @@ services:
         volumes:
             - ./manager_conf/entry.sh:/go/manager-api/entry.sh
         networks:
-            apisix-dashboard:
+            apisix-net:
                 ipv4_address: 192.17.5.12
     dashboard:
         build:
@@ -60,10 +60,10 @@ services:
         volumes:
             - "./dashboard_conf/nginx.conf:/etc/nginx/conf.d/default.conf"
         networks:
-            apisix-dashboard:
+            apisix-net:
                 ipv4_address: 192.17.5.13
 networks:
-    apisix:
+    apisix-net:
         driver: bridge
         ipam:
             config:
