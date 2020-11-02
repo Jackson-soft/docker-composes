@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 services:
     mariadb-master:
         image: mariadb
@@ -64,7 +64,6 @@ services:
             - /data0/elasticsearch/logs:/usr/share/elasticsearch/logs
         ports:
             - 8055:9200
-            - 8056:9300
         networks:
             - database-net
 networks:
