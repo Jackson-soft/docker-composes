@@ -14,7 +14,7 @@ services:
             - ./mysql_conf/master/my.cnf:/etc/mysql/my.cnf
             - /data0/mariadb:/var/lib/mysql
         networks:
-            - mariadb-net
+            - database-net
     mariadb-slave:
         image: mariadb
         container_name: mariadb-slave
@@ -34,7 +34,7 @@ services:
             - ./mysql_conf/slave/my.cnf:/etc/mysql/my.cnf
             - /data1/mariadb:/var/lib/mysql
         networks:
-            - mariadb-net
+            - database-net
     redis:
         image: redis
         container_name: redis
@@ -43,6 +43,26 @@ services:
             - "8044:6379"
         volumes:
             - ./redis_data:/data
+        networks:
+            - database-net
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch
+        container_name: elasticsearch
+        restart: always
+        environment:
+            - discovery.type=single-node
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            - /data1/elasticsearch:/usr/share/elasticsearch/data
+        ports:
+            - 8055:9200
+            - 8056:9300
+        networks:
+            - database-net
 networks:
-    mariadb-net:
+    database-net:
         driver: bridge
