@@ -60,7 +60,8 @@ services:
                 soft: -1
                 hard: -1
         volumes:
-            - /data0/elasticsearch:/usr/share/elasticsearch/
+            - /data0/elasticsearch/data:/usr/share/elasticsearch/data
+            - /data0/elasticsearch/logs:/usr/share/elasticsearch/logs
         ports:
             - 8055:9200
             - 8056:9300
