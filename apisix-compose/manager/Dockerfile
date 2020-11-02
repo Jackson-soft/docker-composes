@@ -40,8 +40,8 @@ FROM alpine
 
 WORKDIR /go/manager-api
 COPY --from=build-env /go/manager-api/ /go/manager-api/
-COPY ../manager_conf/entry.sh /go/manager-api/entry.sh
-COPY ../manager_conf/conf.json /go/manager-api/conf.json
+COPY ./scripts/entry.sh /go/manager-api/entry.sh
+COPY ./scripts/conf.json /go/manager-api/conf.json
 COPY --from=build-env /usr/share/zoneinfo/Hongkong /etc/localtime
 
 RUN apk update  \
