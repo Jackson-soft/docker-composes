@@ -48,9 +48,9 @@ COPY --from=pre-build /usr/local/apisix-dashboard .
 
 WORKDIR /usr/local/apisix-dashboard/web
 
-RUN yarn install
-
-RUN yarn build
+RUN apk update && apk add --no-cache python3 python3-dev make g++ \
+    && yarn install \
+    && yarn build
 
 FROM alpine:latest as prod
 
