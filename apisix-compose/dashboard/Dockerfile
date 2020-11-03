@@ -14,31 +14,57 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+FROM alpine:latest as pre-build
 
-FROM adockero/git-cli as git
+ARG APISIX_DASHBOARD_VERSION=v2.0
 
-ARG GIT_BRANCH=master
+RUN set -x \
+    && wget https://github.com/apache/apisix-dashboard/archive/${APISIX_DASHBOARD_VERSION}.tar.gz -O /tmp/apisix-dashboard.tar.gz \
+    && mkdir /usr/local/apisix-dashboard \
+    && tar -xvf /tmp/apisix-dashboard.tar.gz -C /usr/local/apisix-dashboard --strip 1
 
-RUN cd / && git clone https://github.com/apache/apisix-dashboard.git
-RUN cd /apisix-dashboard && git checkout -B ${GIT_BRANCH} origin/${GIT_BRANCH}
+FROM golang:latest as api-builder
 
-# phase-build
-FROM node:14 as builder
+WORKDIR /usr/local/apisix-dashboard
+COPY --from=pre-build /usr/local/apisix-dashboard .
 
-WORKDIR /usr/src/app/
-USER root
+WORKDIR /usr/local/apisix-dashboard/api
+RUN mkdir -p ../output/conf && cp ./conf/*.json ../output/conf
 
-COPY --from=git /apisix-dashboard/package.json ./
-COPY --from=git /apisix-dashboard/yarn.lock ./
-RUN yarn
+RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -O /tmp/v1.1.tar.gz \
+    && mkdir /tmp/dag-to-lua \
+    && tar -xvf /tmp/v1.1.tar.gz -C /tmp/dag-to-lua --strip 1 \
+    && mkdir -p ../output/dag-to-lua \
+    && mv /tmp/dag-to-lua/lib/* ../output/dag-to-lua/ \
+    && go env -w GO111MODULE=on \
+    && go env -w GOPROXY=https://goproxy.io,direct \
+    && CGO_ENABLED=0 go build -o ../output/manager-api .
 
-COPY --from=git /apisix-dashboard ./
-RUN yarn build && rm -rf /usr/src/app/node_modules
+FROM node:14-alpine as fe-builder
 
-# phase-run
-FROM nginx
+WORKDIR /usr/local/apisix-dashboard
 
-COPY --from=git /apisix-dashboard/docker/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
+COPY --from=pre-build /usr/local/apisix-dashboard .
 
-EXPOSE 80
+WORKDIR /usr/local/apisix-dashboard/web
+
+RUN yarn install
+
+RUN yarn build
+
+FROM alpine:latest as prod
+
+WORKDIR /usr/local/apisix-dashboard
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
+    && apk add lua5.1 \
+    && mkdir -p ./output
+
+COPY --from=fe-builder /usr/local/apisix-dashboard/output/ ./output
+COPY --from=api-builder /usr/local/apisix-dashboard/output/ ./
+
+ENV APISIX_CONF_PATH /usr/local/apisix-dashboard/conf
+
+EXPOSE 8080
+
+CMD [ "/usr/local/apisix-dashboard/manager-api" ]
