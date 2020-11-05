@@ -1,0 +1,9 @@
+* 说明
+这是mongodb的一主两人副本集集群的docker部署脚本。
+
+部署前执行 ~before.sh~ 脚本。
+
+使用docker启动mongodb后，使用的用户是systemd-coredump，也就是999，所以要执行：
+#+begin_src shell
+chown 999 /mongo/key
+#+end_src

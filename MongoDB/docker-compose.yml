@@ -7,7 +7,7 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --replSet BigBoss --oplogSize 128
+        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --replSet BigBoss --directoryperdb
         ports:
             - 8077:27017
         volumes:
@@ -23,7 +23,7 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --replSet BigBoss --oplogSize 128
+        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --replSet BigBoss --directoryperdb
         ports:
             - 8078:27017
         volumes:
@@ -39,12 +39,12 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --replSet BigBoss --oplogSize 128
+        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --replSet BigBoss --directoryperdb
         ports:
             - 8079:27017
         volumes:
             - /data2/mongo:/data/db
-            - ./keyfiles/secondary1/mongo
+            - ./keyfiles/secondary1:/mongo
         networks:
             mongo-net:
                 ipv4_address: 172.18.5.12
