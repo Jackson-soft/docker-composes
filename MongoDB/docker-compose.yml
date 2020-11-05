@@ -7,11 +7,12 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --dbpath /data/db --replSet BigBoss --oplogSize 128
+        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --replSet BigBoss --oplogSize 128
         ports:
             - 8077:27017
         volumes:
             - /data0/mongo:/data/db
+            - ./keyfiles:/mongo
         networks:
             mongo-net:
                 ipv4_address: 172.18.5.10
@@ -22,11 +23,12 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --dbpath /data/db --replSet BigBoss --oplogSize 128
+        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --replSet BigBoss --oplogSize 128
         ports:
             - 8078:27017
         volumes:
             - /data1/mongo:/data/db
+            - ./keyfiles:/mongo
         networks:
             mongo-net:
                 ipv4_address: 172.18.5.11
@@ -37,11 +39,12 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --dbpath /data/db --replSet BigBoss --oplogSize 128
+        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --replSet BigBoss --oplogSize 128
         ports:
             - 8079:27017
         volumes:
             - /data2/mongo:/data/db
+            - ./keyfiles:/mongo
         networks:
             mongo-net:
                 ipv4_address: 172.18.5.12
@@ -59,6 +62,7 @@ services:
             - MONGO2=mongodb-secondary0
             - MONGO3=mongodb-secondary1
             - RS=BigBoss
+            - PASSWORD=12^xH0
         entrypoint: ["/scripts/setup.sh"]
         networks:
             mongo-net:
