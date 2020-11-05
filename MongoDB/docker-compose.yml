@@ -1,0 +1,71 @@
+version: "3.7"
+services:
+    mongodb-primary:
+        image: mongo
+        container_name: mongodb-primary
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
+        command: mongod --dbpath /data/db --replSet BigBoss --oplogSize 128
+        ports:
+            - 8077:27017
+        volumes:
+            - /data0/mongo:/data/db
+        networks:
+            mongo-net:
+                ipv4_address: 172.18.5.10
+    mongodb-secondary0:
+        image: mongo
+        container_name: mongodb-secondary0
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
+        command: mongod --dbpath /data/db --replSet BigBoss --oplogSize 128
+        ports:
+            - 8078:27017
+        volumes:
+            - /data1/mongo:/data/db
+        networks:
+            mongo-net:
+                ipv4_address: 172.18.5.11
+    mongodb-secondary1:
+        image: mongo
+        container_name: mongodb-secondary1
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
+        command: mongod --dbpath /data/db --replSet BigBoss --oplogSize 128
+        ports:
+            - 8079:27017
+        volumes:
+            - /data2/mongo:/data/db
+        networks:
+            mongo-net:
+                ipv4_address: 172.18.5.12
+    mongo-set-setup:
+        image: mongo
+        container_name: mongo-set-setup
+        depends_on:
+            - mongodb-primary
+            - mongodb-secondary0
+            - mongodb-secondary1
+        volumes:
+            - ./scripts:/scripts
+        environment:
+            - MONGO1=mongodb-primary
+            - MONGO2=mongodb-secondary0
+            - MONGO3=mongodb-secondary1
+            - RS=BigBoss
+        entrypoint: ["/scripts/setup.sh"]
+        networks:
+            mongo-net:
+                ipv4_address: 172.18.5.13
+networks:
+    mongo-net:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.18.0.0/16
