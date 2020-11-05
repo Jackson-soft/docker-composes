@@ -12,7 +12,7 @@ services:
             - 8077:27017
         volumes:
             - /data0/mongo:/data/db
-            - ./keyfiles:/mongo
+            - ./keyfiles/primary:/mongo
         networks:
             mongo-net:
                 ipv4_address: 172.18.5.10
@@ -28,7 +28,7 @@ services:
             - 8078:27017
         volumes:
             - /data1/mongo:/data/db
-            - ./keyfiles:/mongo
+            - ./keyfiles/secondary0:/mongo
         networks:
             mongo-net:
                 ipv4_address: 172.18.5.11
@@ -44,7 +44,7 @@ services:
             - 8079:27017
         volumes:
             - /data2/mongo:/data/db
-            - ./keyfiles:/mongo
+            - ./keyfiles/secondary1/mongo
         networks:
             mongo-net:
                 ipv4_address: 172.18.5.12
