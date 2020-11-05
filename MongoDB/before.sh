@@ -1,6 +1,6 @@
 #!/bin/bash
 
-chmod +x script/setup.sh
+chmod +x scripts/setup.sh
 
 chmod 400 keyfiles/primary/mongo.key
 chown 999 keyfiles/primary/mongo.key
