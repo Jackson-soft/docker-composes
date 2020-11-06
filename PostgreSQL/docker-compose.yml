@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.7"
 
 services:
     postgres:
@@ -10,7 +10,7 @@ services:
         volumes:
             - ./postgresql/data:/var/lib/postgresql/data
         ports:
-            - "5432:5432"
+            - "8066:5432"
         networks:
             - postgres
         restart: unless-stopped
