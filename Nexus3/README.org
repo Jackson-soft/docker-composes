@@ -1,0 +1,1 @@
+mkdir /some/dir/nexus-data && chown -R 200 /some/dir/nexus-data
