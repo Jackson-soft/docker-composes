@@ -29,7 +29,7 @@ services:
             - "--initial-cluster=etcd-1=http://0.0.0.0:2380"
             - "--logger=zap"
         volumes:
-            - ./etcd_data:/etcd_data
+            - /opt/etcd_data:/etcd_data
         ports:
             - 2379:2379
             - 2380:2380

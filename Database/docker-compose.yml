@@ -42,7 +42,7 @@ services:
         ports:
             - "8044:6379"
         volumes:
-            - ./redis_data:/data
+            - /opt/redis_data:/data
         networks:
             - database-net
     elasticsearch:

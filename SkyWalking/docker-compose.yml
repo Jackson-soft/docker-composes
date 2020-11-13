@@ -14,10 +14,11 @@ services:
             - http.cors.enabled=true
             - http.cors.allow-origin=*
         volumes:
-            - ./elasticsearch/logs:/usr/share/elasticsearch/logs
-            - ./elasticsearch/data:/usr/share/elasticsearch/data
+            - /opt/elasticsearch/logs:/usr/share/elasticsearch/logs
+            - /opt/elasticsearch/data:/usr/share/elasticsearch/data
         networks:
             - elastic
+
     kibana:
         image: kibana:7.9.3
         container_name: kibana
@@ -29,6 +30,7 @@ services:
             - elasticsearch
         networks:
             - elastic
+
     oap:
         image: apache/skywalking-oap-server:8.2.0-es7
         container_name: oap
@@ -51,6 +53,7 @@ services:
             SW_STORAGE_ES_CLUSTER_NODES: elasticsearch:9200
         networks:
             - elastic
+
     ui:
         image: apache/skywalking-ui
         container_name: ui
@@ -65,5 +68,6 @@ services:
             SW_OAP_ADDRESS: oap:12800
         networks:
             - elastic
+
 networks:
     elastic:

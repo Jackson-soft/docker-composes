@@ -5,7 +5,7 @@ services:
         container_name: redis
         restart: unless-stopped
         volumes:
-            - ./redis_data:/data
+            - /opt/redis_data:/data
         networks:
             kms_net:
                 ipv4_address: 172.18.5.9
@@ -14,17 +14,15 @@ services:
         restart: always
         ports:
             - 3478:3478
-            #- 49152-65535:49152-65535/udp
+            - 3478:3478/udp
         command:
             - --log-file=stdout
         depends_on:
             - redis
         volumes:
             - ./cotrun/turnserver.conf:/etc/coturn/turnserver.conf:ro
-            #- ./coturn/privkey.pem:/etc/ssl/private/privkey.pem
-            #- ./coturn/cert.pem:/etc/ssl/certs/cert.pem
-            - /home/jacksoncy/work/nginx/cert.pem:/etc/ssl/certs/cert.pem
-            - /home/jacksoncy/work/nginx/privkey.pem:/etc/ssl/certs/privkey.pem
+            - /opt/certs/cert.pem:/etc/ssl/certs/cert.pem
+            - /opt/certs/privkey.pem:/etc/ssl/certs/privkey.pem
         networks:
             kms_net:
                 ipv4_address: 172.18.5.10
