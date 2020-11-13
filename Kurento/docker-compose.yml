@@ -20,7 +20,7 @@ services:
         depends_on:
             - redis
         volumes:
-            - ./cotrun/turnserver.conf:/etc/coturn/turnserver.conf:ro
+            - ./coturn/turnserver.conf:/etc/coturn/turnserver.conf:ro
             - /opt/certs/cert.pem:/etc/ssl/certs/cert.pem
             - /opt/certs/privkey.pem:/etc/ssl/certs/privkey.pem
         networks:
