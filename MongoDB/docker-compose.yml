@@ -14,7 +14,7 @@ services:
             - /data0/mongo:/data/db
             - ./keyfiles/primary:/mongo
         networks:
-            mongo-net:
+            mongo_net:
                 ipv4_address: 172.18.5.10
     mongodb-secondary0:
         image: mongo
@@ -30,7 +30,7 @@ services:
             - /data1/mongo:/data/db
             - ./keyfiles/secondary0:/mongo
         networks:
-            mongo-net:
+            mongo_net:
                 ipv4_address: 172.18.5.11
     mongodb-secondary1:
         image: mongo
@@ -46,7 +46,7 @@ services:
             - /data2/mongo:/data/db
             - ./keyfiles/secondary1:/mongo
         networks:
-            mongo-net:
+            mongo_net:
                 ipv4_address: 172.18.5.12
     mongo-set-setup:
         image: mongo
@@ -65,7 +65,7 @@ services:
             - PASSWORD=12^xH0
         entrypoint: ["/scripts/setup.sh"]
         networks:
-            mongo-net:
+            mongo_net:
                 ipv4_address: 172.18.5.13
     mongo-configsvr0:
         image: mongo
@@ -77,7 +77,7 @@ services:
         volumes:
             - /data0/configdb:/data/configdb
         networks:
-            mongo-net:
+            mongo_net:
                 ipv4_address: 172.18.5.14
     mongo-configsvr1:
         image: mongo
@@ -89,7 +89,7 @@ services:
         volumes:
             - /data1/configdb:/data/configdb
         networks:
-            mongo-net:
+            mongo_net:
                 ipv4_address: 172.18.5.15
     mongo-configsvr2:
         image: mongo
@@ -101,7 +101,7 @@ services:
         volumes:
             - /data2/configdb:/data/configdb
         networks:
-            mongo-net:
+            mongo_net:
                 ipv4_address: 172.18.5.16
     mongos:
         image: mongo
@@ -115,7 +115,7 @@ services:
         ports:
             - 8072:27017
         networks:
-            mongo-net:
+            mongo_net:
                 ipv4_address: 172.18.5.17
     mongo-init:
         image: mongo
@@ -129,6 +129,9 @@ services:
             - mongodb://172.18.5.14:27017
             - --eval
             - 'rs.initiate({ _id: "BigSur", configsvr: true, members: [{_id:0,host:"172.18.5.14:27017"},{_id:1,host:"172.18.5.15:27017"},{_id:2,host:"172.18.5.16:27017"}]})'
+        networks:
+            mongo_net:
+                ipv4_address: 172.18.5.18
     mongos-init:
         image: mongo
         depends_on:
@@ -139,8 +142,11 @@ services:
             - mongodb://172.18.5.17:27017
             - --eval
             - 'sh.addShard("BigBoss/172.18.5.10:27017,172.18.5.10:27017,172.18.5.10:27017")'
+        networks:
+            mongo_net:
+                ipv4_address: 172.18.5.19
 networks:
-    mongo-net:
+    mongo_net:
         driver: bridge
         ipam:
             config:
