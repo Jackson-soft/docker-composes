@@ -124,11 +124,7 @@ services:
             - mongo-configsvr1
             - mongo-configsvr2
         restart: on-failure:5
-        command:
-            - mongo
-            - --host mongo-configsvr0:27017
-            - --eval
-            - 'rs.initiate({ _id: "BigSur", configsvr: true, members: [{_id:0,host:"mongo-configsvr0:27017"},{_id:1,host:"mongo-configsvr1:27017"},{_id:2,host:"mongo-configsvr2:27017"}]})'
+        command: mongo --host mongo-configsvr0:27017 --eval 'rs.initiate({ _id: "BigSur", configsvr: true, members: [{_id:0,host:"mongo-configsvr0:27017"},{_id:1,host:"mongo-configsvr1:27017"},{_id:2,host:"mongo-configsvr2:27017"}]})'
     mongos-init:
         image: mongo
         depends_on:
