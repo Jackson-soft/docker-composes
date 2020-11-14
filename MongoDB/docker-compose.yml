@@ -126,9 +126,9 @@ services:
         restart: on-failure:5
         command:
             - mongo
-            - mongodb://mongo-configsvr0:27017
+            - mongodb://172.18.5.14:27017
             - --eval
-            - 'rs.initiate({ _id: "BigSur", configsvr: true, members: [{_id:0,host:"mongo-configsvr0:27017"},{_id:1,host:"mongo-configsvr1:27017"},{_id:2,host:"mongo-configsvr2:27017"}]})'
+            - 'rs.initiate({ _id: "BigSur", configsvr: true, members: [{_id:0,host:"172.18.5.14:27017"},{_id:1,host:"172.18.5.15:27017"},{_id:2,host:"172.18.5.16:27017"}]})'
     mongos-init:
         image: mongo
         depends_on:
@@ -136,9 +136,9 @@ services:
         restart: on-failure:5
         command:
             - mongo
-            - mongodb://mongos:27017
+            - mongodb://172.18.5.17:27017
             - --eval
-            - 'sh.addShard("BigBoss/mongodb-primary:27017,mongodb-secondary0:27017,mongodb-secondary1:27017")'
+            - 'sh.addShard("BigBoss/172.18.5.10:27017,172.18.5.10:27017,172.18.5.10:27017")'
 networks:
     mongo-net:
         driver: bridge
