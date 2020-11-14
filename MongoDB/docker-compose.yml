@@ -71,7 +71,7 @@ services:
         image: mongo
         container_name: mongo-configsvr0
         restart: always
-        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb
+        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb --port 27017
         ports:
             - 8074:27017
         volumes:
@@ -83,7 +83,7 @@ services:
         image: mongo
         container_name: mongo-configsvr1
         restart: always
-        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb
+        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb --port 27017
         ports:
             - 8075:27017
         volumes:
@@ -95,7 +95,7 @@ services:
         image: mongo
         container_name: mongo-configsvr2
         restart: always
-        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb
+        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb --port 27017
         ports:
             - 8076:27017
         volumes:
