@@ -136,7 +136,7 @@ services:
         restart: on-failure:5
         command:
             - mongo
-            - --host mongo-configsvr0:27017
+            - --host mongos:27017
             - --eval
             - 'sh.addShard("BigBoss/mongodb-primary:27017,mongodb-secondary0:27017,mongodb-secondary1:27017")'
 networks:
