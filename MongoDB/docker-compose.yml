@@ -111,4 +111,4 @@ services:
 
 networks:
     mongo_net:
-        external: true
+        driver: bridge
