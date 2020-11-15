@@ -1,26 +1,22 @@
 #!/bin/bash
 
-chmod +x scripts/setup.sh
-chmod +x scripts/config.sh
-chmod +x scripts/mongos.sh
+## Generate global auth key between cluster nodes
+openssl rand -base64 756 > keyfile/mongo.key
+chmod 400 keyfile/mongo.key
+chown 999 keyfile/mongo.key
 
-chmod 400 keyfiles/primary/mongo.key
-chown 999 keyfiles/primary/mongo.key
+## Start the whole stack
+docker-compose up -d 
 
-chmod 400 keyfiles/secondary0/mongo.key
-chown 999 keyfiles/secondary0/mongo.key
+## Config servers setup
+docker exec -it mongo-configsvr0 sh -c "mongo --port 27017 < /scripts/configserver.js"
 
-chmod 400 keyfiles/secondary1/mongo.key
-chown 999 keyfiles/secondary1/mongo.key
+## Shard servers setup
+docker exec -it mongodb-primary sh -c "mongo --port 27018 < /scripts/shard.js"
 
-chmod 400 keyfiles/configsvr0/mongo.key
-chown 999 keyfiles/configsvr0/mongo.key
+## Apply sharding configuration
+sleep 15
+docker exec -it mongos sh -c "mongo --port 27017 < /scripts/mongos.js"
 
-chmod 400 keyfiles/configsvr1/mongo.key
-chown 999 keyfiles/configsvr1/mongo.key
-
-chmod 400 keyfiles/configsvr2/mongo.key
-chown 999 keyfiles/configsvr2/mongo.key
-
-chmod 400 keyfiles/mongos/mongo.key
-chown 999 keyfiles/mongos/mongo.key
+## Enable admin account
+#docker exec -it mongodbdocker_mongo-router-01_1 sh -c "mongo --port 27017 < /mongo-auth.init.js"

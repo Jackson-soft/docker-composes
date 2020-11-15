@@ -1,0 +1,1 @@
+sh.addShard("BigBoss/mongodb-primary:27017,mongodb-secondary1:27017,mongodb-secondary1:27017")

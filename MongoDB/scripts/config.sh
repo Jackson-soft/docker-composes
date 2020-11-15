@@ -7,7 +7,7 @@ mongodb3=$(getent hosts ${MONGO3} | awk '{ print $1 }')
 port=${PORT:-27019}
 
 echo "Waiting for startup.."
-until mongo --host ${mongodb1}:${port} --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)' &>/dev/null; do
+until mongo --port ${port} --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)' &>/dev/null; do
     printf '.'
     sleep 1
 done
@@ -15,7 +15,7 @@ done
 echo "Started.."
 
 echo setup.sh time now: $(date +"%T")
-mongo --host ${mongodb1}:${port} <<EOF
+mongo --port ${port} <<EOF
     var cfg = {
         "_id": "${RS}",
         "configsvr": true,
