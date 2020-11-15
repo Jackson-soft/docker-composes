@@ -119,6 +119,7 @@ services:
                 ipv4_address: 172.18.5.17
     mongo-init:
         image: mongo
+        container_name: mongo-init
         depends_on:
             - mongo-configsvr0
             - mongo-configsvr1
@@ -137,6 +138,7 @@ services:
                 ipv4_address: 172.18.5.18
     mongos-init:
         image: mongo
+        container_name: mongos-init
         depends_on:
             - mongos
         restart: on-failure:5
