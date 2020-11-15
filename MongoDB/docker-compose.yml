@@ -71,9 +71,9 @@ services:
         image: mongo
         container_name: mongo-configsvr0
         restart: always
-        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb --port 27017
+        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb --port 27019
         ports:
-            - 8074:27017
+            - 8074:27019
         volumes:
             - /data0/configdb:/data/configdb
         networks:
@@ -83,9 +83,9 @@ services:
         image: mongo
         container_name: mongo-configsvr1
         restart: always
-        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb --port 27017
+        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb --port 27019
         ports:
-            - 8075:27017
+            - 8075:27019
         volumes:
             - /data1/configdb:/data/configdb
         networks:
@@ -95,9 +95,9 @@ services:
         image: mongo
         container_name: mongo-configsvr2
         restart: always
-        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb --port 27017
+        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb --port 27019
         ports:
-            - 8076:27017
+            - 8076:27019
         volumes:
             - /data2/configdb:/data/configdb
         networks:
@@ -106,14 +106,14 @@ services:
     mongos:
         image: mongo
         container_name: mongos
-        command: mongos --configdb BigSur/172.18.5.14:27017,172.18.5.15:27017,172.18.5.16:27017
+        command: mongos --configdb BigSur/172.18.5.14:27019,172.18.5.15:27019,172.18.5.16:27019 --port 27018
         restart: always
         depends_on:
             - mongo-configsvr0
             - mongo-configsvr1
             - mongo-configsvr2
         ports:
-            - 8072:27017
+            - 8072:27018
         networks:
             mongo_net:
                 ipv4_address: 172.18.5.17

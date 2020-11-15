@@ -13,4 +13,4 @@ done
 echo "Started.."
 
 echo setup.sh time now: $(date +"%T")
-mongo --host ${mongodb1}:${port} --eval 'sh.addShard("BigBoss/172.18.5.10:27017,172.18.5.10:27017,172.18.5.10:27017")'
+mongo --host ${mongodb1}:${port} --eval 'sh.addShard("BigBoss/172.18.5.10:27017,172.18.5.11:27017,172.18.5.12:27017")'
