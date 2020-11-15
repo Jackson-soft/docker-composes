@@ -4,10 +4,7 @@ services:
         image: mongo
         container_name: mongo-configsvr0
         restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --configsvr --replSet BigSur --keyFile /mongo/mongo.key --dbpath /data/configdb --port 27019
+        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb --port 27019
         ports:
             - 8074:27019
         volumes:
@@ -20,15 +17,11 @@ services:
         image: mongo
         container_name: mongo-configsvr1
         restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --configsvr --replSet BigSur --keyFile /mongo/mongo.key --dbpath /data/configdb --port 27019
+        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb --port 27019
         ports:
             - 8075:27019
         volumes:
             - /data1/configdb:/data/configdb
-            - ./keyfiles/configsvr1:/mongo
         networks:
             mongo_net:
                 ipv4_address: 172.18.5.15
@@ -36,15 +29,11 @@ services:
         image: mongo
         container_name: mongo-configsvr2
         restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --configsvr --replSet BigSur --keyFile /mongo/mongo.key --dbpath /data/configdb --port 27019
+        command: mongod --configsvr --replSet BigSur --dbpath /data/configdb --port 27019
         ports:
             - 8076:27019
         volumes:
             - /data2/configdb:/data/configdb
-            - ./keyfiles/configsvr2:/mongo
         networks:
             mongo_net:
                 ipv4_address: 172.18.5.16
@@ -63,7 +52,6 @@ services:
             - MONGO2=mongo-configsvr1
             - MONGO3=mongo-configsvr2
             - RS=BigSur
-            - PASSWORD=12^xH0
         entrypoint: ["/scripts/config.sh"]
         networks:
             mongo_net:
