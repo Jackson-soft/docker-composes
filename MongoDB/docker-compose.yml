@@ -1,72 +1,5 @@
 version: "3.7"
 services:
-    mongodb-primary:
-        image: mongo
-        container_name: mongodb-primary
-        restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --replSet BigBoss
-        ports:
-            - 8077:27017
-        volumes:
-            - /data0/mongo:/data/db
-            - ./keyfiles/primary:/mongo
-        networks:
-            mongo_net:
-                ipv4_address: 172.18.5.10
-    mongodb-secondary0:
-        image: mongo
-        container_name: mongodb-secondary0
-        restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --replSet BigBoss
-        ports:
-            - 8078:27017
-        volumes:
-            - /data1/mongo:/data/db
-            - ./keyfiles/secondary0:/mongo
-        networks:
-            mongo_net:
-                ipv4_address: 172.18.5.11
-    mongodb-secondary1:
-        image: mongo
-        container_name: mongodb-secondary1
-        restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --replSet BigBoss
-        ports:
-            - 8079:27017
-        volumes:
-            - /data2/mongo:/data/db
-            - ./keyfiles/secondary1:/mongo
-        networks:
-            mongo_net:
-                ipv4_address: 172.18.5.12
-    mongo-set-setup:
-        image: mongo
-        container_name: mongo-set-setup
-        depends_on:
-            - mongodb-primary
-            - mongodb-secondary0
-            - mongodb-secondary1
-        volumes:
-            - ./scripts:/scripts
-        environment:
-            - MONGO1=mongodb-primary
-            - MONGO2=mongodb-secondary0
-            - MONGO3=mongodb-secondary1
-            - RS=BigBoss
-            - PASSWORD=12^xH0
-        entrypoint: ["/scripts/setup.sh"]
-        networks:
-            mongo_net:
-                ipv4_address: 172.18.5.13
     mongo-configsvr0:
         image: mongo
         container_name: mongo-configsvr0
@@ -115,25 +48,6 @@ services:
         networks:
             mongo_net:
                 ipv4_address: 172.18.5.16
-    mongos:
-        image: mongo
-        container_name: mongos
-        restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongos --configdb BigSur/172.18.5.14:27019,172.18.5.15:27019,172.18.5.16:27019 --keyFile /mongo/mongo.key --port 27018
-        depends_on:
-            - mongo-configsvr0
-            - mongo-configsvr1
-            - mongo-configsvr2
-        volumes:
-            - ./keyfiles/mongos:/mongo
-        ports:
-            - 8072:27018
-        networks:
-            mongo_net:
-                ipv4_address: 172.18.5.17
     mongo-init:
         image: mongo
         container_name: mongo-init
@@ -154,6 +68,93 @@ services:
         networks:
             mongo_net:
                 ipv4_address: 172.18.5.18
+    mongodb-primary:
+        image: mongo
+        container_name: mongodb-primary
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
+        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --shardsvr --replSet BigBoss
+        ports:
+            - 8077:27017
+        volumes:
+            - /data0/mongo:/data/db
+            - ./keyfiles/primary:/mongo
+        networks:
+            mongo_net:
+                ipv4_address: 172.18.5.10
+    mongodb-secondary0:
+        image: mongo
+        container_name: mongodb-secondary0
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
+        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --shardsvr --replSet BigBoss
+        ports:
+            - 8078:27017
+        volumes:
+            - /data1/mongo:/data/db
+            - ./keyfiles/secondary0:/mongo
+        networks:
+            mongo_net:
+                ipv4_address: 172.18.5.11
+    mongodb-secondary1:
+        image: mongo
+        container_name: mongodb-secondary1
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
+        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --shardsvr --replSet BigBoss
+        ports:
+            - 8079:27017
+        volumes:
+            - /data2/mongo:/data/db
+            - ./keyfiles/secondary1:/mongo
+        networks:
+            mongo_net:
+                ipv4_address: 172.18.5.12
+    mongo-set-setup:
+        image: mongo
+        container_name: mongo-set-setup
+        depends_on:
+            - mongodb-primary
+            - mongodb-secondary0
+            - mongodb-secondary1
+        volumes:
+            - ./scripts:/scripts
+        environment:
+            - MONGO1=mongodb-primary
+            - MONGO2=mongodb-secondary0
+            - MONGO3=mongodb-secondary1
+            - RS=BigBoss
+            - PASSWORD=12^xH0
+        entrypoint: ["/scripts/setup.sh"]
+        networks:
+            mongo_net:
+                ipv4_address: 172.18.5.13
+    mongos:
+        image: mongo
+        container_name: mongos
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
+        command: mongos --configdb BigSur/172.18.5.14:27019,172.18.5.15:27019,172.18.5.16:27019 --keyFile /mongo/mongo.key --port 27018
+        depends_on:
+            - mongo-configsvr0
+            - mongo-configsvr1
+            - mongo-configsvr2
+        volumes:
+            - ./keyfiles/mongos:/mongo
+        ports:
+            - 8072:27018
+        networks:
+            mongo_net:
+                ipv4_address: 172.18.5.17
+
     mongos-init:
         image: mongo
         container_name: mongos-init

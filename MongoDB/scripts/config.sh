@@ -16,7 +16,7 @@ echo "Started.."
 
 echo setup.sh time now: $(date +"%T")
 mongo --host ${mongodb1}:${port} -uroot -p${PASSWORD} --authenticationDatabase admin <<EOF
-   var cfg = {
+    var cfg = {
         "_id": "${RS}",
         "configsvr": true,
         "members": [
