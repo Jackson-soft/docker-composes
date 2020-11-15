@@ -10,6 +10,7 @@ services:
         volumes:
             - /data0/configdb:/data/configdb
             - ./keyfile:/mongo
+            - ./scripts:/scripts
         networks:
             - mongo_net
 
@@ -52,6 +53,7 @@ services:
         volumes:
             - /data0/mongo:/data/db
             - ./keyfile:/mongo
+            - ./scripts:/scripts
         networks:
             - mongo_net
 
@@ -101,6 +103,7 @@ services:
             - mongo-configsvr2
         volumes:
             - ./keyfile:/mongo
+            - ./scripts:/scripts
         ports:
             - 8072:27018
         networks:
