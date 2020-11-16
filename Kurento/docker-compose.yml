@@ -6,26 +6,18 @@ services:
         restart: unless-stopped
         volumes:
             - /opt/redis_data:/data
-        networks:
-            kms_net:
-                ipv4_address: 172.18.5.9
+
     coturn:
         image: instrumentisto/coturn
         restart: always
-        ports:
-            - 3478:3478
-            - 3478:3478/udp
-        command:
-            - --log-file=stdout
         depends_on:
             - redis
         volumes:
             - ./coturn/turnserver.conf:/etc/coturn/turnserver.conf:ro
             - /opt/certs/cert.pem:/etc/ssl/certs/cert.pem
-            - /opt/certs/privkey.pem:/etc/ssl/certs/privkey.pem
-        networks:
-            kms_net:
-                ipv4_address: 172.18.5.10
+            - /opt/certs/privkey.pem:/etc/ssl/private/privkey.pem
+        network_mode: host
+
     kms:
         image: kurento/kurento-media-server
         restart: always
@@ -37,12 +29,3 @@ services:
             - KMS_TURN_URL=aidhgj:aidhgj9527@172.18.5.10:3478?transport=udp
         ports:
             - 8888:8888
-        networks:
-            kms_net:
-                ipv4_address: 172.18.5.11
-networks:
-    kms_net:
-        driver: bridge
-        ipam:
-            config:
-                - subnet: 172.18.0.0/16
