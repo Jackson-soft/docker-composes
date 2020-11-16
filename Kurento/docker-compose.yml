@@ -6,6 +6,8 @@ services:
         restart: unless-stopped
         volumes:
             - /opt/redis_data:/data
+        ports:
+            - 6379:6379
 
     coturn:
         image: instrumentisto/coturn
@@ -24,8 +26,8 @@ services:
         depends_on:
             - coturn
         environment:
-            - KMS_STUN_IP=172.18.5.10
-            - KMS_STUN_PORT=3478
-            - KMS_TURN_URL=aidhgj:aidhgj9527@172.18.5.10:3478?transport=udp
+            - KMS_STUN_IP=${detect-external-ip}
+            - KMS_STUN_PORT=${stun_port:-3478}
+            - KMS_TURN_URL=aidhgj:aidhgj9527@${detect-external-ip}:${stun_port:-3478}?transport=udp
         ports:
             - 8888:8888

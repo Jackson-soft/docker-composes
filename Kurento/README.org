@@ -1,0 +1,3 @@
+* Kurento Media Server
+** 说明
+/Docker/ 化部署需要传入这几个环境变量 /KMS_STUN_IP/, /KMS_STUN_PORT/, /KMS_TURN_URL/ ，一般是外网地址。
