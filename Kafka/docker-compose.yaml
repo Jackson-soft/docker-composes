@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+    zookeeper:
+        image: zookeeper
+        restart: always
+        volumes:
+            - /opt/zk_data:/data
+        ports:
+            - 2181:2181
+
+    kafka:
+        image: wurstmeister/kafka
+        restart: always
+        ports:
+            - 8088:9092
+        environment:
+            KAFKA_ADVERTISED_HOST_NAME: localhost
+            KAFKA_CREATE_TOPICS: "test:1:1"
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
