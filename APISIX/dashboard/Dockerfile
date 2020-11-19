@@ -26,6 +26,7 @@ RUN set -x \
 FROM golang:latest as api-builder
 
 WORKDIR /usr/local/apisix-dashboard
+
 COPY --from=pre-build /usr/local/apisix-dashboard .
 
 WORKDIR /usr/local/apisix-dashboard/api
@@ -58,12 +59,10 @@ WORKDIR /usr/local/apisix-dashboard
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
     && apk add lua5.1 \
-    && mkdir -p ./output
+    && mkdir -p logs
 
-COPY --from=fe-builder /usr/local/apisix-dashboard/output/ ./output
+COPY --from=fe-builder /usr/local/apisix-dashboard/output/ ./
 COPY --from=api-builder /usr/local/apisix-dashboard/output/ ./
-
-ENV APISIX_CONF_PATH /usr/local/apisix-dashboard/conf
 
 EXPOSE 8080
 
