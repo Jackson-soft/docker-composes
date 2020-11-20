@@ -35,7 +35,7 @@ services:
             - zookeeper
             - kafka
         ports:
-            - 9000:9000
+            - 8090:9000
         environment:
             ZK_HOSTS: zookeeper:2181
             APPLICATION_SECRET: "random-secret"
