@@ -12,3 +12,4 @@ services:
             - 8077:27017
         volumes:
             - /data0/mongo:/data/db
+            - ./scripts:/scripts
