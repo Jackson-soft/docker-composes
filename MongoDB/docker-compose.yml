@@ -1,114 +1,14 @@
 version: "3.7"
 services:
-    mongo-configsvr0:
+    mongodb:
         image: mongo
-        container_name: mongo-configsvr0
-        restart: always
-        command: mongod --configsvr --replSet BigSur --keyFile /mongo/mongo.key --dbpath /data/configdb --port 27019
-        ports:
-            - 8074:27019
-        volumes:
-            - /data0/configdb:/data/configdb
-            - ./keyfile:/mongo
-            - ./scripts:/scripts
-        networks:
-            - mongo_net
-
-    mongo-configsvr1:
-        image: mongo
-        container_name: mongo-configsvr1
-        restart: always
-        command: mongod --configsvr --replSet BigSur --keyFile /mongo/mongo.key --dbpath /data/configdb --port 27019
-        ports:
-            - 8075:27019
-        volumes:
-            - /data1/configdb:/data/configdb
-            - ./keyfile:/mongo
-        networks:
-            - mongo_net
-
-    mongo-configsvr2:
-        image: mongo
-        container_name: mongo-configsvr2
-        restart: always
-        command: mongod --configsvr --replSet BigSur --keyFile /mongo/mongo.key --dbpath /data/configdb --port 27019
-        ports:
-            - 8076:27019
-        volumes:
-            - /data2/configdb:/data/configdb
-            - ./keyfile:/mongo
-        networks:
-            - mongo_net
-
-    mongodb-primary:
-        image: mongo
-        container_name: mongodb-primary
+        container_name: mongodb
         restart: always
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --shardsvr --replSet BigBoss
+        command: mongod --auth
         ports:
             - 8077:27017
         volumes:
             - /data0/mongo:/data/db
-            - ./keyfile:/mongo
-            - ./scripts:/scripts
-        networks:
-            - mongo_net
-
-    mongodb-secondary0:
-        image: mongo
-        container_name: mongodb-secondary0
-        restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --shardsvr --replSet BigBoss
-        ports:
-            - 8078:27017
-        volumes:
-            - /data1/mongo:/data/db
-            - ./keyfile:/mongo
-        networks:
-            - mongo_net
-
-    mongodb-secondary1:
-        image: mongo
-        container_name: mongodb-secondary1
-        restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --dbpath /data/db --keyFile /mongo/mongo.key --shardsvr --replSet BigBoss
-        ports:
-            - 8079:27017
-        volumes:
-            - /data2/mongo:/data/db
-            - ./keyfile:/mongo
-        networks:
-            - mongo_net
-
-    mongos:
-        image: mongo
-        container_name: mongos
-        restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongos --configdb BigSur/mongo-configsvr0:27019,mongo-configsvr1:27019,mongo-configsvr2:27019 --keyFile /mongo/mongo.key --bind_ip_all --port 27018
-        depends_on:
-            - mongo-configsvr0
-            - mongo-configsvr1
-            - mongo-configsvr2
-        volumes:
-            - ./keyfile:/mongo
-            - ./scripts:/scripts
-        ports:
-            - 8072:27018
-        networks:
-            - mongo_net
-
-networks:
-    mongo_net:
-        driver: bridge
