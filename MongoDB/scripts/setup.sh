@@ -25,5 +25,6 @@ mongo --host ${mongodb1}:${port} -uroot -p${PASSWORD} --authenticationDatabase a
     };
     rs.initiate(cfg, { force: true });
     rs.reconfig(cfg, { force: true });
+    use admin;
     db.createUser({user: "sa", pwd: "f9bd44806614!", roles: [{role: "root", db: "admin"}]});
 EOF

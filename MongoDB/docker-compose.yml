@@ -23,7 +23,7 @@ services:
         volumes:
             - ./scripts:/scripts
         environment:
-            - MONGO11=mongodb
+            - MONGO1=mongodb
             - RS=BigBoss
             - PASSWORD=12^xH0
         entrypoint: ["/scripts/setup.sh"]
