@@ -1,5 +1,7 @@
 #!/bin/bash
 
+chmod +x scripts/setup.sh
+
 ## Start the whole stack
 docker-compose up -d
 

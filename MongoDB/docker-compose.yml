@@ -26,7 +26,7 @@ services:
             - MONGO11=mongodb
             - RS=BigBoss
             - PASSWORD=12^xH0
-        entrypoint: ["/scripts/init-shard.sh"]
+        entrypoint: ["/scripts/setup.sh"]
         restart: on-failure:3
         networks:
             - mongo_net
