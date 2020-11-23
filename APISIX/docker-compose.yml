@@ -26,7 +26,7 @@ services:
         image: apache/apisix:2.0-alpine
         restart: always
         volumes:
-            - /opt/apisix_logs:/usr/local/apisix-dashboard/logs
+            - /opt/apisix_logs:/usr/local/apisix/logs
             - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro
         depends_on:
             - etcd
