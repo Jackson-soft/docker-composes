@@ -13,3 +13,8 @@ services:
         volumes:
             - /data0/mongo:/data/db
             - ./scripts:/scripts
+        networks:
+            - mongo_net
+networks:
+    mongo_net:
+        driver: bridge
