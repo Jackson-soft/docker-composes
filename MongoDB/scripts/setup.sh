@@ -1,8 +1,6 @@
 #!/bin/bash
 
 mongodb1=$(getent hosts ${MONGO1} | awk '{ print $1 }')
-mongodb2=$(getent hosts ${MONGO2} | awk '{ print $1 }')
-mongodb3=$(getent hosts ${MONGO3} | awk '{ print $1 }')
 
 port=${PORT:-27017}
 
@@ -22,17 +20,10 @@ mongo --host ${mongodb1}:${port} -uroot -p${PASSWORD} --authenticationDatabase a
             {
                 "_id": 0,
                 "host": "${mongodb1}:${port}"
-            },
-            {
-                "_id": 1,
-                "host": "${mongodb2}:${port}"
-            },
-            {
-                "_id": 2,
-                "host": "${mongodb3}:${port}"
             }
         ]
     };
     rs.initiate(cfg, { force: true });
     rs.reconfig(cfg, { force: true });
+    db.createUser({user: "sa", pwd: "f9bd44806614!", roles: [{role: "root", db: "admin"}]});
 EOF

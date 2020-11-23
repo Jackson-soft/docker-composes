@@ -12,9 +12,25 @@ services:
             - 8077:27017
         volumes:
             - /data0/mongo:/data/db
-            - ./scripts:/scripts
         networks:
             - mongo_net
+
+    mongo-setup:
+        image: mongo
+        container_name: mongo-setup
+        depends_on:
+            - mongodb
+        volumes:
+            - ./scripts:/scripts
+        environment:
+            - MONGO11=mongodb
+            - RS=BigBoss
+            - PASSWORD=12^xH0
+        entrypoint: ["/scripts/init-shard.sh"]
+        restart: on-failure:3
+        networks:
+            - mongo_net
+
 networks:
     mongo_net:
         driver: bridge

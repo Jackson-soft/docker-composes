@@ -167,3 +167,6 @@ BigBoss:SECONDARY> rs.status()
 
 * 
 mongodump -h localhost:27017 -u sa -p f9bd44806614! -d imapi -o 1123 --authenticationDatabase admin
+
+
+mongorestore -h localhost:27017 -d imapi --u sa --p f9bd44806614! --authenticationDatabase admin --dir 1123
