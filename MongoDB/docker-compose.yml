@@ -7,7 +7,7 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: 12^xH0
-        command: mongod --dbpath /data/db --auth --replSet BigBoss --shardsvr
+        command: mongod --dbpath /data/db --port 27017 --auth --replSet BigBoss --shardsvr
         ports:
             - 8077:27017
         volumes:

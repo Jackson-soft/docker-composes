@@ -163,3 +163,7 @@ BigBoss:SECONDARY> rs.status()
 #+end_src
 
 如果如上面返回则说明副本集设置成功。
+
+
+* 
+mongodump -h localhost:27017 -u sa -p f9bd44806614! -d imapi -o 1123 --authenticationDatabase admin
