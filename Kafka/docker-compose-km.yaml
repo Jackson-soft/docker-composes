@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+    kafka_manager:
+        image: hlebalbau/kafka-manager:stable
+        container_name: kafka_manager
+        restart: always
+        ports:
+            - 8080:9000
+        environment:
+            ZK_HOSTS: 172.31.18.221:7005,172.31.27.73:7005,172.31.30.185:7005
+            APPLICATION_SECRET: random-secret
