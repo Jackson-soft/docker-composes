@@ -21,6 +21,7 @@ services:
         volumes:
             - /opt/elasticsearch/logs:/usr/share/elasticsearch/logs
             - /opt/elasticsearch/data:/usr/share/elasticsearch/data
+            - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
         networks:
             - elastic
 
@@ -41,6 +42,8 @@ services:
             memlock:
                 soft: -1
                 hard: -1
+        volumes:
+            - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
         networks:
             - elastic
 
@@ -58,6 +61,8 @@ services:
         ports:
             - 11800:11800
             - 12800:12800
+        volumes:
+            - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
         healthcheck:
             test: ["CMD-SHELL", "/skywalking/bin/swctl"]
             interval: 30s
@@ -73,6 +78,8 @@ services:
         restart: always
         environment:
             SW_OAP_ADDRESS: oap:12800
+        volumes:
+            - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
         depends_on:
             - oap
         links:
