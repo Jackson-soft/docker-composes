@@ -17,14 +17,14 @@ services:
         networks:
             - database_net
 
-        adminer:
-            image: adminer
-            container_name: adminer
-            restart: always
-            ports:
-                - 8080:8080
-            networks:
-                - database_net
+    adminer:
+        image: adminer
+        container_name: adminer
+        restart: always
+        ports:
+            - 8080:8080
+        networks:
+            - database_net
 
 networks:
     database_net:
