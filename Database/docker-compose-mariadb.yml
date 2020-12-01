@@ -6,8 +6,6 @@ services:
         container_name: mariadb
         restart: always
         environment:
-            - MYSQL_USER=2uchat
-            - MYSQL_PASSWORD=1#aHh2
             - MYSQL_ROOT_PASSWORD=F4i^f9
         ports:
             - 8033:3306
