@@ -1,5 +1,6 @@
 #!/bin/sh
 
+mkdir -p /opt/crond
 cp -r ./docker.sh /opt/crond/docker.sh
 chmod +x /opt/crond/docker.sh
 
