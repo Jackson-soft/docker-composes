@@ -1,6 +1,7 @@
 #!/bin/sh
 
-cp -r ./Crond /opt/crond
+cp -r ./docker.sh /opt/crond/docker.sh
+chmod +x /opt/crond/docker.sh
 
 procName=cron
 procNumber=$(ps -ef | grep $procName | grep -v grep | wc -l)
@@ -11,4 +12,4 @@ else
     echo "$procName is run"
 fi
 
-echo "* * * * * /bin/sh /opt/crond/service.sh" >>/var/spool/cron/root
+crontab rootcron
