@@ -23,7 +23,8 @@ services:
         volumes:
             - ./scripts:/scripts
         environment:
-            - MONGO1=mongodb
+            - MONGO=${REAL_EXTERNAL_IP}
+            - PORT=8077
             - RS=BigBoss
             - PASSWORD=12^xH0
         entrypoint: ["/scripts/setup.sh"]
