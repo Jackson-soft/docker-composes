@@ -1,0 +1,9 @@
+version: "3.7"
+
+services:
+    redis-live:
+        image: snakeliwei/redislive
+        container_name: redis-live
+        ports:
+            - 6000:8888
+        restart: unless-stopped
