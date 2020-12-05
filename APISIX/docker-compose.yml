@@ -33,7 +33,6 @@ services:
         ports:
             - 9080:9080
             - 9180:9180
-            - 9443:9443
         networks:
             apisix_net:
                 ipv4_address: 172.18.5.11
@@ -44,7 +43,7 @@ services:
             dockerfile: Dockerfile
         restart: always
         ports:
-            - 8080:8080
+            - 9000:9000
         volumes:
             - ./dashboard_conf/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
         networks:
