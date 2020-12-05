@@ -16,7 +16,7 @@
 #
 FROM alpine:latest as pre-build
 
-ARG APISIX_DASHBOARD_VERSION=v2.0
+ARG APISIX_DASHBOARD_VERSION=v2.1.1
 
 RUN set -x \
     && wget https://github.com/apache/apisix-dashboard/archive/${APISIX_DASHBOARD_VERSION}.tar.gz -O /tmp/apisix-dashboard.tar.gz \
@@ -64,6 +64,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
 COPY --from=fe-builder /usr/local/apisix-dashboard/output/ ./
 COPY --from=api-builder /usr/local/apisix-dashboard/output/ ./
 
-EXPOSE 8080
+EXPOSE 9000
 
 CMD [ "/usr/local/apisix-dashboard/manager-api" ]
