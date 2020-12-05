@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+    redisinsight:
+        image: redislabs/redisinsight
+        container_name: redisinsight
+        restart: unless-stopped
+        ports:
+            - 6000:8001
+        volumes:
+            - /opt/redisinsight:/db
