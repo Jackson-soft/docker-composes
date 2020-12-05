@@ -1,7 +1,8 @@
 #!/bin/bash
 
 mongodb=$(getent hosts ${MONGO} | awk '{ print $1 }')
-
+ehost=${EHOST}
+eport=${EPORT}
 port=${PORT:-27017}
 
 echo "Waiting for startup.."
@@ -19,7 +20,7 @@ mongo --host ${mongodb}:${port} -uroot -p${PASSWORD} --authenticationDatabase ad
         "members": [
             {
                 "_id": 0,
-                "host": "${mongodb}:${port}"
+                "host": "${ehost}:${eport}"
             }
         ]
     };

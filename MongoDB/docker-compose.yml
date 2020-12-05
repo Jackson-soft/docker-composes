@@ -1,4 +1,5 @@
 version: "3.7"
+
 services:
     mongodb:
         image: mongo
@@ -23,8 +24,9 @@ services:
         volumes:
             - ./scripts:/scripts
         environment:
-            - MONGO=${REAL_EXTERNAL_IP}
-            - PORT=8077
+            - MONGO=mongodb
+            - EHOST=${REAL_EXTERNAL_IP}
+            - EPORT=8077
             - RS=BigBoss
             - PASSWORD=12^xH0
         entrypoint: ["/scripts/setup.sh"]
