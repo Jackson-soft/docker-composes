@@ -1,0 +1,10 @@
+#+TITLE: 部署 `RedisInsight`
+
+*注意* ： ~RedisInsight~ 的数据目录是需要不同用户权限的，需要执行下面的命令：
+
+#+begin_src shell
+sudo chown -R 1001 /opt/redisinsight
+#+end_src
+
+* 文档
+- [[https://docs.redislabs.com/latest/ri/installing/install-docker/][Installing RedisInsight on Docker | Redis Labs Documentation Center]]

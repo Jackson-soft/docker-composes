@@ -1,6 +1,4 @@
 * 说明
-这是mongodb的一主两人副本集集群的docker部署脚本。
-
 部署前执行 ~before.sh~ 脚本。
 
 使用docker启动mongodb后，使用的用户是systemd-coredump，也就是999，所以要执行：
@@ -10,7 +8,7 @@ chown 999 /mongo/key
 ** 检查副本集是否添加成功
 *** 进入docker
 #+begin_src shell
-docker exec -it mongodb-primary /bin/bash
+docker exec -it mongodb /bin/bash
 #+end_src
 *** 连接到mongo
 #+begin_src shell
