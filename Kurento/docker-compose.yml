@@ -1,4 +1,5 @@
 version: "3.7"
+
 services:
     redis:
         image: redis
@@ -21,6 +22,10 @@ services:
             - /opt/certs/cert.pem:/etc/ssl/certs/cert.pem
             - /opt/certs/privkey.pem:/etc/ssl/private/privkey.pem
         network_mode: host
+        deploy:
+            resources:
+                limits:
+                    memory: 1024M
 
     kms:
         image: kurento/kurento-media-server

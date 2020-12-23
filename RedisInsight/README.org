@@ -1,4 +1,4 @@
-#+TITLE: 部署 `RedisInsight`
+#+TITLE: 部署 ~RedisInsight~
 
 *注意* ： ~RedisInsight~ 的数据目录是需要不同用户权限的，需要执行下面的命令：
 
