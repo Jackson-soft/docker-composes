@@ -19,8 +19,8 @@ services:
             - redis
         volumes:
             - ./coturn/turnserver.conf:/etc/coturn/turnserver.conf:ro
-            - /opt/certs/cert.pem:/etc/ssl/certs/cert.pem
-            - /opt/certs/privkey.pem:/etc/ssl/private/privkey.pem
+            #- /opt/certs/cert.pem:/etc/ssl/certs/cert.pem
+            #- /opt/certs/privkey.pem:/etc/ssl/private/privkey.pem
         network_mode: host
 
     kms:
