@@ -23,7 +23,7 @@ services:
                 ipv4_address: 172.18.5.10
 
     apisix:
-        image: apache/apisix:2.0-alpine
+        image: apache/apisix
         restart: always
         volumes:
             - /opt/apisix_logs:/usr/local/apisix/logs
