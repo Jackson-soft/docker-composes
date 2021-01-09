@@ -6,7 +6,7 @@ services:
         restart: always
         volumes:
             - /opt/apisix_logs:/usr/local/apisix/logs
-            - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro
+            - ./config.yaml:/usr/local/apisix/conf/config.yaml:ro
         ports:
             - 9080:9080
             - 9090:9090

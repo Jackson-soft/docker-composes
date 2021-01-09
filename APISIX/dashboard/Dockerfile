@@ -18,10 +18,10 @@ FROM alpine:latest as pre-build
 
 ARG APISIX_DASHBOARD_VERSION=master
 
-RUN set -x \
-    && wget https://github.com/apache/apisix-dashboard/archive/${APISIX_DASHBOARD_VERSION}.tar.gz -O /tmp/apisix-dashboard.tar.gz \
-    && mkdir /usr/local/apisix-dashboard \
-    && tar -xvf /tmp/apisix-dashboard.tar.gz -C /usr/local/apisix-dashboard --strip 1
+RUN set -x &&
+    wget https://github.com/apache/apisix-dashboard/archive/${APISIX_DASHBOARD_VERSION}.tar.gz -O /tmp/apisix-dashboard.tar.gz &&
+    mkdir /usr/local/apisix-dashboard &&
+    tar -xvf /tmp/apisix-dashboard.tar.gz -C /usr/local/apisix-dashboard --strip 1
 
 FROM golang:latest as api-builder
 
@@ -32,14 +32,14 @@ COPY --from=pre-build /usr/local/apisix-dashboard .
 WORKDIR /usr/local/apisix-dashboard/api
 RUN mkdir -p ../output/conf && cp ./conf/*.json ../output/conf
 
-RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -O /tmp/v1.1.tar.gz \
-    && mkdir /tmp/dag-to-lua \
-    && tar -xvf /tmp/v1.1.tar.gz -C /tmp/dag-to-lua --strip 1 \
-    && mkdir -p ../output/dag-to-lua \
-    && mv /tmp/dag-to-lua/lib/* ../output/dag-to-lua/ \
-    && go env -w GO111MODULE=on \
-    && go env -w GOPROXY=https://goproxy.io,direct \
-    && CGO_ENABLED=0 go build -o ../output/manager-api ./cmd/manager
+RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -O /tmp/v1.1.tar.gz &&
+    mkdir /tmp/dag-to-lua &&
+    tar -xvf /tmp/v1.1.tar.gz -C /tmp/dag-to-lua --strip 1 &&
+    mkdir -p ../output/dag-to-lua &&
+    mv /tmp/dag-to-lua/lib/* ../output/dag-to-lua/ &&
+    go env -w GO111MODULE=on &&
+    go env -w GOPROXY=https://goproxy.io,direct &&
+    CGO_ENABLED=0 go build -o ../output/manager-api ./cmd/manager
 
 FROM node:14-alpine as fe-builder
 
@@ -49,16 +49,16 @@ COPY --from=pre-build /usr/local/apisix-dashboard .
 
 WORKDIR /usr/local/apisix-dashboard/web
 
-RUN apk update && apk add --no-cache python3 python3-dev make g++ \
-    && yarn install \
-    && yarn build
+RUN apk update && apk add --no-cache python3 python3-dev make g++ &&
+    yarn install &&
+    yarn build
 
 FROM alpine:latest as prod
 
 WORKDIR /usr/local/apisix-dashboard
 
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
-    && mkdir -p logs
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories &&
+    mkdir -p logs
 
 COPY --from=fe-builder /usr/local/apisix-dashboard/output/ ./
 COPY --from=api-builder /usr/local/apisix-dashboard/output/ ./
