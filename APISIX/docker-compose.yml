@@ -1,60 +1,12 @@
-
 version: "3.7"
 
 services:
-    etcd:
-        image: quay.io/coreos/etcd:v3.4.13
-        restart: always
-        entrypoint: /usr/local/bin/etcd
-        command:
-            - "--name=etcd-1"
-            - "--data-dir=/etcd_data"
-            - "--listen-client-urls=http://0.0.0.0:2379"
-            - "--advertise-client-urls=http://0.0.0.0:2379"
-            - "--listen-peer-urls=http://0.0.0.0:2380"
-            - "--initial-advertise-peer-urls=http://0.0.0.0:2380"
-            - "--initial-cluster=etcd-1=http://0.0.0.0:2380"
-            - "--logger=zap"
-        volumes:
-            - /opt/etcd_data:/etcd_data
-        ports:
-            - 2379:2379
-            - 2380:2380
-        networks:
-            apisix_net:
-                ipv4_address: 172.18.5.10
-
     apisix:
         image: apache/apisix
         restart: always
         volumes:
             - /opt/apisix_logs:/usr/local/apisix/logs
             - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro
-        depends_on:
-            - etcd
         ports:
             - 9080:9080
             - 9180:9180
-        networks:
-            apisix_net:
-                ipv4_address: 172.18.5.11
-
-    dashboard:
-        build:
-            context: ./dashboard
-            dockerfile: Dockerfile
-        restart: always
-        ports:
-            - 9000:9000
-        volumes:
-            - ./dashboard_conf/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
-        networks:
-            apisix_net:
-                ipv4_address: 172.18.5.12
-
-networks:
-    apisix_net:
-        driver: bridge
-        ipam:
-            config:
-                - subnet: 172.18.0.0/16

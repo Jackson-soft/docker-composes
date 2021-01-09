@@ -1,0 +1,2 @@
+* skywalking-compose
+注意部署时修改 ~.env~ 的 ~ES_URL~ 地址。

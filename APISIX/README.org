@@ -1,2 +1,4 @@
 * /apisix/ 的部署及配置
 *注意* ： ~apisix_conf/config.yaml~ 这个文件不要用 ~prettier~ 格式化，不然 ~Lua~ 读取的时候会报错导致部署失败。
+
+部署的时候注意修改 ~apisix~ 和 ~dashboard~ 两个配置文件中的 ~etcd~ 的连接地址。
