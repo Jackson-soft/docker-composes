@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
     etcd:
-        image: quay.io/coreos/etcd:v3.4.13
+        image: quay.io/coreos/etcd:v3.4.14
         restart: always
         entrypoint: /usr/local/bin/etcd
         command:
@@ -14,6 +14,7 @@ services:
             - "--initial-advertise-peer-urls=http://0.0.0.0:2380"
             - "--initial-cluster=etcd-1=http://0.0.0.0:2380"
             - "--logger=zap"
+            - "--enable-grpc-gateway"
         volumes:
             - /opt/etcd_data:/etcd_data
         ports:
