@@ -9,4 +9,4 @@ services:
             - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro
         ports:
             - 9080:9080
-            - 9180:9180
+            - 9090:9090

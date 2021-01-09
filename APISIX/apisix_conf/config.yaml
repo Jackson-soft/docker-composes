@@ -100,6 +100,9 @@ apisix:
     dns_resolver_valid: 30          # valid time for dns result 30 seconds
     resolver_timeout: 5             # resolver timeout
     enable_control: true
+    control:
+        ip: "0.0.0.0"
+        port: 9090
 nginx_config:                     # config for render the template to genarate nginx.conf
     error_log: "logs/error.log"
     error_log_level: "warn"         # warn,error
