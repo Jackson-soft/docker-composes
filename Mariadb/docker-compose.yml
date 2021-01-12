@@ -10,7 +10,7 @@ services:
         ports:
             - 8033:3306
         volumes:
-            - ./mariadb_conf/my.cnf:/etc/mysql/my.cnf
+            - ./my.cnf:/etc/mysql/my.cnf
             - /opt/mariadb:/var/lib/mysql
         networks:
             - database_net

@@ -9,5 +9,5 @@ services:
         ports:
             - 8044:6379
         volumes:
-            - ./redis_conf/redis.conf:/etc/redis.conf:ro
+            - ./redis.conf:/etc/redis.conf:ro
             - /opt/redis_data:/data

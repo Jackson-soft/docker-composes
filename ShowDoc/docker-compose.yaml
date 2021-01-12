@@ -1,10 +1,11 @@
 version: "3.7"
 
 services:
-    doc:
+    showdoc:
         image: star7th/showdoc
+        container_name: showdoc
+        restart: unless-stopped
         volumes:
             - /opt/showdoc_data:/var/www/html
         ports:
             - 5051:80
-        restart: unless-stopped

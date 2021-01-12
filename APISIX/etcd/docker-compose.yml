@@ -14,7 +14,7 @@ services:
             - "--initial-advertise-peer-urls=http://0.0.0.0:2380"
             - "--initial-cluster=etcd-1=http://0.0.0.0:2380"
             - "--logger=zap"
-            - "--enable-grpc-gateway"
+            - "--enable-grpc-gateway=true"
         volumes:
             - /opt/etcd_data:/etcd_data
         ports:
