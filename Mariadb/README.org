@@ -1,7 +1,2 @@
-* docker-compose 脚本
-** `elasticsearch` 的 `data` 目录
-这里我映射的目录是一块挂载磁盘，只有 `root` 用户有读写权限，在 `es` 启动的时候会报没有写入权限错误，所以为确保万一，
-最好把挂载的目录附上读写权限。
-#+begin_src shell
-chmod -R 777 elasticsearch/
-#+end_src
+#+TITLE: ~MariaDB~ 部署脚本
+部署完后可能通过访问 [[http://127.0.0.1:8080/]] 页面来管理数据库。登录时服务器一栏填 ~mariadb:3306~ ，用户名是 ~root~ 。
