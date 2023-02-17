@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+    clickhouse:
+        image: yandex/clickhouse-server
+        container_name: clickhouse
+        restart: always
+        volumes:
+            - ./config.xml:/etc/clickhouse-server/config.xml
+            - ./users.xml:/etc/clickhouse-server/users.xml

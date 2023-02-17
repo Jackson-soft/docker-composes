@@ -1,2 +1,3 @@
 apisix_logs/
 etcd_data/
+.DS_Store
